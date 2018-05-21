@@ -20,6 +20,25 @@ public class PictureGenerator{
      * Main method for testing
      */
     public static void main(String[] args) throws InterruptedException{
+        PictureGenerator pg = new PictureGenerator(716, 1023);
+        for(int i = 0; i < 10; i++){
+            System.out.println(i+"th loop");
+            for(int j = 1; j <= 3; j++){
+                Picture p = new Picture(new File("p"+j+".jpg"));
+                System.out.println("Loading p"+j+" with width"+p.width()+
+                        "and height"+p.height());
+                pg.trainPictureGenerator(p, 1.0/(i+j));
+            }
+        }
+
+        Picture toShow = new Picture(new File("p1.jpg"));
+        pg.writePicture(toShow);
+        toShow.show();
+        System.out.println("Finish");
+
+        toShow.save(new File("generated.jpg"));
+
+        /*
         Picture p1 = new Picture(new File("original.jpg"));
         System.out.println("Loading file with width "+p1.width()
                 +" and height "+p1.height());
@@ -41,6 +60,7 @@ public class PictureGenerator{
         pg1.writePicture(p2);
         p2.show();
         System.out.println("Final show");
+        */
     }
 
     /**
@@ -50,7 +70,7 @@ public class PictureGenerator{
      */
     public PictureGenerator(int width, int height){
         //Default
-        generatorGrid = new PixelGenerator[width][height];
+        generatorGrid = new PixelGenerator[height][width];
         for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++){
                 //The position given is related to the part where
@@ -63,11 +83,12 @@ public class PictureGenerator{
     /**
      * Train the Picture generator with the picture passed in
      * @param p the picture used to train
+     * @param weight how much weight current training is
      */
-    public void trainPictureGenerator(Picture p){
+    public void trainPictureGenerator(Picture p, double weight){
        for(int j = 0; j < generatorGrid.length; j++){
            for(int i = 0; i < generatorGrid[j].length; i++){
-               generatorGrid[j][i].trainGenerator(p);
+               generatorGrid[j][i].trainGenerator(p, weight);
            }
        } 
     }

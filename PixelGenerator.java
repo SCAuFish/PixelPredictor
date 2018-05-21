@@ -67,8 +67,9 @@ public class PixelGenerator{
      * It compares generated Pixel with "answer" pixel and adjust weights
      * accordingly using gradient descent method
      * @param p the picture passed in for training
+     * @param weight how much weight current training is
      */
-    public void trainGenerator(Picture p){
+    public void trainGenerator(Picture p, double weight){
         Pixel left = new Pixel(this.x-1, this.y, p);
         Pixel upLeft = new Pixel(this.x-1, this.y-1, p);
         Pixel top = new Pixel(this.x, this.y-1, p);
@@ -84,6 +85,11 @@ public class PixelGenerator{
         double bDiff = predicted.getB()-answer.getB();
         double bDiffRatio = bDiff/255.0;
         //System.out.println("r: "+rDiff+"g: "+gDiff+"b: "+bDiff);
+    
+        //Add weight to all the diffs
+        rDiffRatio *= weight;
+        gDiffRatio *= weight;
+        bDiffRatio *= weight;
 
         double[] diffs = {rDiffRatio, gDiffRatio, bDiffRatio};
         //Adjust weights in leftWeights
